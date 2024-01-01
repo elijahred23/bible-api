@@ -1,18 +1,20 @@
-const baseURL = "https://api.scripture.api.bible";
-const APIKEY = ""
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const port = 3000;
+const {getBibles} = require('./bible') 
 
-const axios = require('axios')
+app.use(cors({origin:"*"}));
 
-const getBibles = async () => {
-    try{
-        const response = await axios.get(`${baseURL}/v1/bibles`, {
-            headers: {'api-key': APIKEY}
-        });
-        console.log(response.data);
+app.get('/', (req,res)=>{
+    res.send("HELLO WORLD, THIS IS YOUR BIBLES API")
+});
 
-    } catch (error){
-        console.error("Error fetching data: " , error);
-    }
-}
+app.get('/bibles', async (req,res)=>{
+    let bibles = await getBibles();
+    res.send(bibles);
+})
 
-getBibles();
+app.listen(port, ()=>{
+    console.log(`LISTENING ON PORT ${port}`);
+})
