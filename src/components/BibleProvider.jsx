@@ -17,6 +17,8 @@ const BibleProvider = ({ children }) => {
         bibles: [],
         currentBible: null,
         currentBibleId: bibleId,
+        books: [],
+        chapters: [],
     }
 
     const [state, dispatch] = useReducer((state, action) => {
@@ -25,6 +27,8 @@ const BibleProvider = ({ children }) => {
                 return { ...state, bibles: action.payload };
             case 'SET_BOOKS':
                 return {...state, books: action.payload };
+            case 'SET_CHAPTERS':
+                return {...state, chapters: action.payload}
             default:
                 return state;
         }

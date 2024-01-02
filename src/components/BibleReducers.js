@@ -10,3 +10,9 @@ export const setBooks = (books) => {
         payload: books
     }
 }
+export const setChapters = (chapters) => {
+    return {
+        type:'SET_CHAPTERS',
+        payload: chapters
+    }
+}

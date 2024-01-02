@@ -10,7 +10,6 @@ const BooksData = () => {
     const [loading, setLoading] = useState(false);
 
     const getBooks = async (bibleId) => {
-        console.log({bibleId});
         try {
             setLoading(true);
             const response = await fetch(`${import.meta.env.VITE_API_URL}/bibles/${bibleId}/books`);
