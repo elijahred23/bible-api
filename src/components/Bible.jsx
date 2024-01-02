@@ -51,7 +51,13 @@ const Bible = () => {
             setLoading(false);
         }
     }
-
+    const copyToClipboard = (text) => {
+        if ('clipboard' in navigator) {
+            return navigator.clipboard.writeText(text);
+        } else {
+            console.warn('Clipboard API not supported'); F
+        }
+    };
     useEffect(() => {
         getBooks(state.currentBibleId);
         getChapters(state.currentBibleId);
@@ -60,9 +66,9 @@ const Bible = () => {
     useEffect(() => {
         getChapters(state.currentBibleId);
     }, [selectedBookId]);
-    
-    useEffect(()=>{
-        if(selectedChapterId===null) return;
+
+    useEffect(() => {
+        if (selectedChapterId === null) return;
         getChapter(state.currentBibleId);
     }, [selectedChapterId]);
 
@@ -78,19 +84,23 @@ const Bible = () => {
                 })}
             </select>
         </p>}
-        {loading ? <ClipLoader /> : <p>    
+        {loading ? <ClipLoader /> : <p>
             Chapters: &nbsp;
-            <select onChange={event=>{
+            <select onChange={event => {
                 setSelectedChapterId(event.target.value);
             }}>
                 {state.chapters && state.chapters?.map(chapter => {
-                    return <option selected={selectedChapterId ===chapter.id} value={chapter.id}>{chapter.reference}</option>
+                    return <option selected={selectedChapterId === chapter.id} value={chapter.id}>{chapter.reference}</option>
                 })}
             </select>
         </p>}
+        {chapter && <div>
+            <button onClick={() => copyToClipboard(chapter?.content)}>Copy to Clipboard</button>
+        </div>}
         {loading && chapter ? <ClipLoader /> : <p>
-            <div dangerouslySetInnerHTML={{__html: chapter?.content ?? ''}} />
-            </p>}
+            <div dangerouslySetInnerHTML={{ __html: chapter?.content ?? '' }} />
+        </p>}
+
     </>)
 }
 
