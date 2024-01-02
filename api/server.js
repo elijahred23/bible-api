@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 3000;
-const {getBibles, getBooks} = require('./bible') 
+const {getBibles, getBooks, getChapters, getChapter} = require('./bible') 
 
 app.use(cors({origin:"*"}));
 
@@ -21,6 +21,22 @@ app.get('/bibles/:bibleId/books', async (req,res)=>{
     }
     let bibleBooks = await getBooks(bibleId);
     res.send(bibleBooks); 
+})
+
+app.get('/bibles/:bibleId/books/:bookId/chapters', async (req,res)=>{
+    let bibleId = req.params.bibleId;
+    let bookId = req.params.bookId;
+
+    let chapters = await getChapters(bibleId, bookId); 
+    res.send(chapters);
+})
+
+app.get('/bibles/:bibleId/chapters/:chapterId', async (req,res)=>{
+    let bibleId = req.params.bibleId;
+    let chapterId = req.params.chapterId;
+
+    let chapter = await getChapter(bibleId, chapterId);
+    res.send(chapter);
 })
 
 app.listen(port, ()=>{

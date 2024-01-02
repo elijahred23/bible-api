@@ -17,7 +17,6 @@ const getBibles = async () => {
 }
 const getBooks = async (bibleId) => {
     try{
-        console.log(bibleId);
         const response = await axios.get(`${baseURL}/v1/bibles/${bibleId}/books`, headers);
         return response.data;
     } catch(error){
@@ -25,8 +24,26 @@ const getBooks = async (bibleId) => {
         return error;
     }
 }
+const getChapters = async (bibleId, bookId) => {
+    try{
+        const response = await axios.get(`${baseURL}/v1/bibles/${bibleId}/books/${bookId}/chapters`, headers);
+        return response.data;
+    } catch(error){
+        return error;
+    }
+}
+const getChapter = async (bibleId, chapterId) => {
+    try{
+        const response = await axios.get(`${baseURL}/v1/bibles/${bibleId}/chapters/${chapterId}`, headers);
+        return response.data;
+    } catch(error){
+        return error;
+    }
+}
 
 module.exports = {
     getBibles,
     getBooks,
+    getChapters,
+    getChapter
 }

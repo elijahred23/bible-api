@@ -4,3 +4,9 @@ export const setBibles = (bibles) => {
         payload: bibles
     }
 };
+export const setBooks = (books) => {
+    return {
+        type: 'SET_BOOKS',
+        payload: books
+    }
+}
