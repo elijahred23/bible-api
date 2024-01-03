@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
 import BiblesData from './components/Data/BiblesData.jsx';
-import Bibles from './components/bibles.jsx';
+import Bibles from './components/Bibles.jsx';
 import Bible from './components/Bible.jsx';
 import { BibleProvider } from './components/BibleProvider.jsx';
 import BooksData from './components/Data/BooksData.jsx';

@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 3000;
-const {getBibles, getBooks, getChapters, getChapter} = require('./bible') 
+const {getBibles, getBooks, getChapters, getChapter} = require('./bible');
+const {generateResponse} = require('./chatGPT')
 
 app.use(cors({origin:"*"}));
 
@@ -37,6 +38,12 @@ app.get('/bibles/:bibleId/chapters/:chapterId', async (req,res)=>{
 
     let chapter = await getChapter(bibleId, chapterId);
     res.send(chapter);
+});
+
+app.get('/chatGPT/:prompt', async (req,res)=>{
+    const {prompt} = req.params;
+    const response = await generateResponse(prompt)
+    res.send(response);
 })
 
 app.listen(port, ()=>{
