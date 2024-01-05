@@ -1,0 +1,130 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    background-color: #4CAF50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: space-around;
+    background-color: #333;
+    padding: 10px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: white;
+    padding: 10px;
+}
+
+.nav-links a:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 20px;
+}
+
+.copy-button {
+    background-color: #4CAF50;
+    /* Green background color */
+    color: white;
+    /* White text color */
+    border: none;
+    /* Remove border */
+    padding: 10px 20px;
+    /* Add padding */
+    text-align: center;
+    /* Center text */
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    /* Add border radius */
+}
+
+.copy-button span {
+    display: inline-block;
+    padding: 10px;
+}
+
+.bible-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.copy-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.copy-button span {
+    display: inline-block;
+    padding: 10px;
+}
+
+/* Add styling for select dropdowns */
+select {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+/* Add styling for loading spinner */
+div>.clip-loader {
+    margin-top: 20px;
+}
+
+.bibles-container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.bible-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.03);
+    }
+
+    h4 {
+        color: #4CAF50;
+    }
+
+    p {
+        margin: 8px 0;
+    }
+
+    hr {
+        border: 0.5px solid #ddd;
+    }
+}
+
+/* Add styling for loading spinner */
+div>.clip-loader {
+    margin-top: 20px;
+}
