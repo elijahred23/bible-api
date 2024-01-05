@@ -2,7 +2,7 @@ import express from 'express';
 const app = express();
 import cors from 'cors';
 const port = 3000;
-import {getBibles, getBooks, getChapters, getChapter} from './bible.js';
+import {getBibles, getBooks, getChapters, getChapter, answerBibleQuestion} from './bible.js';
 import { ApiLoggerMiddleware } from './ApiLoggerMiddleware.js';
 // import {generateResponse} from './chatGPT.js';
 
@@ -48,11 +48,18 @@ app.get('/bibles/:bibleId/chapters/:chapterId', async (req,res)=>{
     res.send(chapter);
 });
 
-// app.get('/chatGPT/:prompt', async (req,res)=>{
-//     const {prompt} = req.params;
-//     const response = await generateResponse(prompt)
-//     res.send(response);
-// })
+app.get('/bible/question', async (req,res)=>{
+    let bibleContent = req.query.bibleContent;
+    let question = req.query.question;
+
+    if(!bibleContent || !question){
+        res.send("Add bibleContent or question as query param", 401);
+        return ;
+    }
+    let response = await answerBibleQuestion(bibleContent, question);
+    res.send(response);
+})
+
 
 app.listen(port, ()=>{
     console.log(`LISTENING ON PORT ${port}`);

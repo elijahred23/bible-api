@@ -1,9 +1,11 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { setBooks, setChapters } from './BibleReducers';
 import { useBibleContext } from './BibleProvider';
 import { ClipLoader } from 'react-spinners';
-const apiURL = `http://${window.location.hostname}:3000`;
 import '../App.css';
+
+const apiURL = `http://${window.location.hostname}:3000`;
 
 const Bible = () => {
   const { state, dispatch } = useBibleContext();
@@ -11,6 +13,9 @@ const Bible = () => {
   const [selectedBookId, setSelectedBookId] = useState("GEN");
   const [selectedChapterId, setSelectedChapterId] = useState(null);
   const [chapter, setChapter] = useState(null);
+  const [bibleQuestion, setBibleQuestion] = useState("Explain simply");
+  const [bibleQuestionLoading, setBibleQuestionLoading] = useState(false);
+  const [bibleQuestionResponse, setBibleQuestionResponse] = useState(null);
 
   const getBooks = async (bibleId) => {
     try {
@@ -55,13 +60,21 @@ const Bible = () => {
     }
   }
 
-  const getMessageFromAPI = async () => {
+  const askBibleQuestion = async () => {
     try {
-      const response = await fetch(`${apiURL}/`);
-      console.log({ response });
-      return response;
+      if (bibleQuestion === '' || bibleQuestionLoading) {
+        return;
+      }
+      setBibleQuestionLoading(true);
+      let response = await fetch(`${apiURL}/bible/question?bibleContent=${encodeURIComponent(chapter?.content)}&question=${bibleQuestion}`);
+      response = await response.json();
+      let message = response.message?.content;
+      setBibleQuestionResponse(message);
+      return message;
     } catch (error) {
       console.error("ERROR: ", error);
+    } finally {
+      setBibleQuestionLoading(false);
     }
   }
 
@@ -90,10 +103,14 @@ const Bible = () => {
   return (
     <div className="bible-container">
       <h2>Bible</h2>
+      {bibleQuestionLoading && <ClipLoader />}
+      {bibleQuestionResponse && <div className="response-container">
+        {bibleQuestionResponse}
+      </div>}
       {loading ? <ClipLoader /> :
         <p>
           Books: &nbsp;
-          <select onChange={event => {
+          <select className="select-dropdown" onChange={event => {
             setSelectedBookId(event.target.value)
           }}>
             {state.books && state.books?.map(book => {
@@ -104,7 +121,7 @@ const Bible = () => {
       {loading ? <ClipLoader /> :
         <p>
           Chapters: &nbsp;
-          <select onChange={event => {
+          <select className="select-dropdown" onChange={event => {
             setSelectedChapterId(event.target.value);
           }}>
             {state.chapters && state.chapters?.map(chapter => {
@@ -115,9 +132,20 @@ const Bible = () => {
       {chapter && <div>
         <button className="copy-button" onClick={() => copyToClipboard(chapter?.content)}><span>Copy to Clipboard</span></button>
       </div>}
+      {!bibleQuestionLoading && chapter && <div>
+        Ask Question About Chapter: &nbsp;
+        <input onKeyDown={event=>{
+          if(event.key === "enter"){
+            askBibleQuestion();
+          }
+        }} className="question-input" onChange={event => {
+          setBibleQuestion(event.target.value);
+        }} value={bibleQuestion} type="text" />
+        <button className="ask-button" onClick={askBibleQuestion}>Ask</button>
+      </div>}
       {loading && chapter ? <ClipLoader /> :
         <p>
-          <div dangerouslySetInnerHTML={{ __html: chapter?.content ?? '' }} />
+          <div className="chapter-content" dangerouslySetInnerHTML={{ __html: chapter?.content ?? '' }} />
         </p>}
     </div>
   )

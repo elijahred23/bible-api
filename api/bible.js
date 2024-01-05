@@ -2,8 +2,9 @@ import dotenv from 'dotenv';
 import axios from 'axios';
 import { logger } from './logger.js';
 import path from 'path';
+import { generateResponse } from './chatGPT.js';
 
-dotenv.config();  
+dotenv.config();
 
 const baseURL = "https://api.scripture.api.bible";
 
@@ -36,13 +37,13 @@ const logAPIKEY = async () => {
 const makeRequest = async (url) => {
     try {
         let headers = await getHeaders();
-        console.log({headers})
+        console.log({ headers })
         let apiKey = await getAPIKey();
-        console.log({apiKey})
+        console.log({ apiKey })
         const response = await axios.get(url, { headers });
         return response.data;
     } catch (error) {
-        logger.error(`Error fetching data from ${url}:` );  
+        logger.error(`Error fetching data from ${url}:`);
     }
 }
 
@@ -61,5 +62,10 @@ const getChapters = (bibleId, bookId) => {
 const getChapter = (bibleId, chapterId) => {
     return makeRequest(`${baseURL}/v1/bibles/${bibleId}/chapters/${chapterId}`);
 }
+const answerBibleQuestion = async (bibleContent, question) => {
+    let response = await generateResponse('You are a helpful assistant who can answer any question related to the bible. You believe it with your heart.',
+        `Here is the bible content: ${bibleContent}. Here is the question ${question}`)
+    return response;
+}
 
-export { getBibles, getBooks, getChapter, getChapters, logAPIKEY };
+export { getBibles, getBooks, getChapter, getChapters, logAPIKEY, answerBibleQuestion };

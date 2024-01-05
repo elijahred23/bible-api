@@ -1,37 +1,16 @@
-const { Configuration, OpenAIApi } = require("openai");
-require("dotenv").config();
+import OpenAI from "openai"; 
+import dotenv from "dotenv";
+dotenv.config();
+const openai = new OpenAI({
+    apiKey: ''
+});
 
-let generateResponse = async (prompt) => {
-    const newConfig = {
-        api_key: process.env.OPEN_AI_API_KEY
-    };
-    const openai = new OpenAIApi(newConfig);
-
-
-    const messageList = []; 
-    messageList.push({ role: "user", content: prompt });
-
-    try {
-        const GPTOutput = await openai.createChatCompletion({
-            model: "gpt-3.5-turbo",
-            messages: messageList,
-        });
-
-        const output_text = GPTOutput.data.choices[0].message.content;
-        console.log(output_text);
-        return output_text;
-
-    } catch (err) {
-        if (err.response) {
-            console.log(err.response.status);
-            console.log(err.response.data);
-        } else {
-            console.log(err.message);
-        }
-    }
+export const generateResponse = async (systemContent, prompt) => {
+    const completion = await openai.chat.completions.create({
+        messages:[{role:'system', content: systemContent},
+    {role:'user', content:prompt}],
+        model: 'gpt-3.5-turbo',
+    });
+    let response = completion.choices[0];
+    return response;
 };
-
-
-module.exports = {
-    generateResponse
-}
