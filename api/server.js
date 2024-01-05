@@ -1,11 +1,19 @@
-const express = require('express');
+import express from 'express'; 
 const app = express();
-const cors = require('cors');
+import cors from 'cors';
 const port = 3000;
-const {getBibles, getBooks, getChapters, getChapter} = require('./bible');
-const {generateResponse} = require('./chatGPT')
+import {getBibles, getBooks, getChapters, getChapter} from './bible.js';
+import { ApiLoggerMiddleware } from './ApiLoggerMiddleware.js';
+// import {generateResponse} from './chatGPT.js';
 
-app.use(cors({origin:"*"}));
+app.use((req,res,next)=>{
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET','POST','PUT','DELETE');
+    res.header('Access-Control-Allow-Headers', 'Contenty-Type');
+    next();
+});
+
+app.use(ApiLoggerMiddleware);
 
 app.get('/', (req,res)=>{
     res.send("HELLO WORLD, THIS IS YOUR BIBLES API")
@@ -40,11 +48,11 @@ app.get('/bibles/:bibleId/chapters/:chapterId', async (req,res)=>{
     res.send(chapter);
 });
 
-app.get('/chatGPT/:prompt', async (req,res)=>{
-    const {prompt} = req.params;
-    const response = await generateResponse(prompt)
-    res.send(response);
-})
+// app.get('/chatGPT/:prompt', async (req,res)=>{
+//     const {prompt} = req.params;
+//     const response = await generateResponse(prompt)
+//     res.send(response);
+// })
 
 app.listen(port, ()=>{
     console.log(`LISTENING ON PORT ${port}`);

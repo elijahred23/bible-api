@@ -3,12 +3,25 @@ FROM node
 WORKDIR /app
 
 COPY package.json .
+COPY .env .
+COPY start-services.sh . 
 RUN npm i
 
 COPY . .
 
-## EXPOSE [Port you mentioned in the vite.config file]
+# Add these lines to copy the api folder to the container
+COPY api /app/api
 
-EXPOSE 5173
+# Add these lines to install the api packages
+WORKDIR /app/api
+COPY /api/package.json .
+COPY /api/.env .
+RUN npm i
+RUN chmod +x /app/start-services.sh
 
-CMD ["npm", "run", "dev"]
+WORKDIR /app
+
+EXPOSE 5174
+EXPOSE 3001
+
+CMD ["/app/start-services.sh"]

@@ -3,6 +3,8 @@ import { ClipLoader } from 'react-spinners';
 import {setBibles} from './BibleReducers';
 import { useBibleContext } from './BibleProvider';
 
+const apiURL = `http://${window.location.hostname}:3000`;
+console.log({apiURL})
 const Bibles = () => {
     const [loading, setLoading] = useState(false);
     const {state,dispatch} = useBibleContext();
@@ -12,7 +14,7 @@ const Bibles = () => {
         return;
         try {
             setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/bibles`);
+            const response = await fetch(`${apiURL}/bibles`);
             const data = await response.json();
             dispatch(setBibles(data.data));
             return data;

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { setBooks, setChapters } from './BibleReducers';
 import { useBibleContext } from './BibleProvider';
 import { ClipLoader } from 'react-spinners';
-
+const apiURL = `http://${window.location.hostname}:3000`;
 const Bible = () => {
     const { state, dispatch } = useBibleContext();
     const [loading, setLoading] = useState(false);
@@ -13,12 +13,12 @@ const Bible = () => {
     const getBooks = async (bibleId) => {
         try {
             setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/bibles/${bibleId}/books`);
+            const response = await fetch(`${apiURL}/bibles/${bibleId}/books`);
             const data = await response.json();
             dispatch(setBooks(data.data));
             return data;
         } catch (error) {
-
+            console.error("ERROR: ", error);
         } finally {
             setLoading(false);
         }
@@ -27,7 +27,7 @@ const Bible = () => {
     const getChapters = async (bibleId) => {
         try {
             setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/bibles/${bibleId}/books/${selectedBookId}/chapters`);
+            const response = await fetch(`${apiURL}/bibles/${bibleId}/books/${selectedBookId}/chapters`);
             const data = await response.json();
             setSelectedChapterId(data.data[0].id)
             dispatch(setChapters(data.data))
@@ -41,7 +41,7 @@ const Bible = () => {
     const getChapter = async (bibleId) => {
         try {
             setLoading(true);
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/bibles/${bibleId}/chapters/${selectedChapterId}`);
+            const response = await fetch(`${apiURL}/bibles/${bibleId}/chapters/${selectedChapterId}`);
             const data = await response.json();
             setChapter(data.data);
             return data;
@@ -49,6 +49,15 @@ const Bible = () => {
             console.error("ERROR: ", error);
         } finally {
             setLoading(false);
+        }
+    }
+    const getMessageFromAPI = async () => {
+        try{
+            const response = await fetch(`${apiURL}/`);
+            console.log({response});
+            return response;
+        } catch(error){
+            console.error("ERROR: ", error);
         }
     }
     const copyToClipboard = (text) => {
@@ -74,6 +83,7 @@ const Bible = () => {
 
     return (<>
         <h2>Bible</h2>
+        <button onClick={getMessageFromAPI}>MESSAGE FROM API</button>
         {loading ? <ClipLoader /> : <p>
             Books: &nbsp;
             <select onChange={event => {
