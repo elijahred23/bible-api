@@ -4,6 +4,7 @@ import { setBooks, setChapters } from './BibleReducers';
 import { useBibleContext } from './BibleProvider';
 import { ClipLoader } from 'react-spinners';
 import '../App.css';
+import Markdown from 'react-markdown';
 
 const apiURL = `http://${window.location.hostname}:3000`;
 
@@ -106,7 +107,7 @@ const Bible = () => {
       <h2>Bible</h2>
       {bibleQuestionLoading && <ClipLoader />}
       {bibleQuestionResponse && <div className="response-container">
-        {bibleQuestionResponse}
+       <Markdown>{bibleQuestionResponse}</Markdown> 
       </div>}
       {loading ? <ClipLoader /> :
         <p>
