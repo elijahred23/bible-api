@@ -67,8 +67,9 @@ const Bible = () => {
       }
       setBibleQuestionLoading(true);
       let response = await fetch(`${apiURL}/bible/question?bibleContent=${encodeURIComponent(chapter?.content)}&question=${bibleQuestion}`);
-      response = await response.json();
-      let message = response.message?.content;
+      const message = await response.text();
+
+      console.log({message})
       setBibleQuestionResponse(message);
       return message;
     } catch (error) {

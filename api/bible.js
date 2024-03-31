@@ -3,6 +3,7 @@ import axios from 'axios';
 import { logger } from './logger.js';
 import path from 'path';
 import { generateResponse } from './chatGPT.js';
+import { generateGeminiResponse } from './gemini.js';
 
 dotenv.config();
 
@@ -10,7 +11,7 @@ const baseURL = "https://api.scripture.api.bible";
 
 const getAPIKey = () => {
     return new Promise((resolve, reject) => {
-        let apiKey = "";
+        let apiKey = "d2bef96c3a068f1fff57e2b1605ed303";
         if (apiKey === null || apiKey === undefined) {
             resolve(null);
         } else {
@@ -25,7 +26,6 @@ const getHeaders = async () => {
         'api-key': apiKey,
         'Content-Type': 'application/json'
     }
-    console.log({ headers, apiKey });
     return headers;
 }
 
@@ -37,35 +37,41 @@ const logAPIKEY = async () => {
 const makeRequest = async (url) => {
     try {
         let headers = await getHeaders();
-        console.log({ headers })
-        let apiKey = await getAPIKey();
-        console.log({ apiKey })
         const response = await axios.get(url, { headers });
-        return response.data;
+        return response;
     } catch (error) {
         logger.error(`Error fetching data from ${url}:`);
     }
 }
 
-const getBibles = () => {
-    return makeRequest(`${baseURL}/v1/bibles`);
+const getBibles = async () => {
+    let response = await makeRequest(`${baseURL}/v1/bibles`);
+    return response.data;
 }
 
-const getBooks = (bibleId) => {
-    return makeRequest(`${baseURL}/v1/bibles/${bibleId}/books`);
+const getBooks = async (bibleId) => {
+    let response  = await makeRequest(`${baseURL}/v1/bibles/${bibleId}/books`);
+    return response.data; 
 }
 
-const getChapters = (bibleId, bookId) => {
-    return makeRequest(`${baseURL}/v1/bibles/${bibleId}/books/${bookId}/chapters`);
+const getChapters = async (bibleId, bookId) => {
+    let response = await makeRequest(`${baseURL}/v1/bibles/${bibleId}/books/${bookId}/chapters`);
+    return response.data;
 }
 
-const getChapter = (bibleId, chapterId) => {
-    return makeRequest(`${baseURL}/v1/bibles/${bibleId}/chapters/${chapterId}`);
+const getChapter = async (bibleId, chapterId) => {
+    let response = await makeRequest(`${baseURL}/v1/bibles/${bibleId}/chapters/${chapterId}`);
+    return response.data; 
+}
+const getAudioBibles = async () => {
+    let response = await makeRequest(`${baseURL}/v1/audio-bibles`);  
+    return response; 
 }
 const answerBibleQuestion = async (bibleContent, question) => {
-    let response = await generateResponse('You are a helpful assistant who can answer any question related to the bible. You believe it with your heart.',
-        `Here is the bible content: ${bibleContent}. Here is the question ${question}`)
+    let bibleQuestion = `You are a helpful assistant who can answer any question related to the bible. You believe it with your heart. Here is the bible content: ${bibleContent}. Here is the question: ${question}`
+    console.log({bibleQuestion})
+    let response = await generateGeminiResponse(bibleQuestion)
     return response;
 }
 
-export { getBibles, getBooks, getChapter, getChapters, logAPIKEY, answerBibleQuestion };
+export { getBibles, getBooks, getChapter, getChapters, logAPIKEY, answerBibleQuestion, getAudioBibles };
